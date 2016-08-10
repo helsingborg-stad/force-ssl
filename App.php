@@ -8,6 +8,8 @@ class App
     {
         add_action('template_redirect', array($this, 'redirectToSSL'));
         add_action('admin_init', array($this, 'redirectToSSL'));
+        add_action('login_init', array($this, 'redirectToSSL'));
+        add_action('rest_api_init', array($this, 'redirectToSSL'));
         add_action('all_plugins', array($this, 'preventMultisiteActivation'));
     }
 
