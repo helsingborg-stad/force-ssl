@@ -19,3 +19,8 @@ require FORCE_SSL_PATH . 'App.php';
 
 //Run it!
 new ForceSSL\App();
+
+//Admin interface
+if (!defined('FORCE_SSL_ADMIN')) {
+    define('FORCE_SSL_ADMIN', true);
+}

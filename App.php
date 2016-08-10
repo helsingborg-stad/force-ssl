@@ -6,7 +6,6 @@ class App
 {
     public function __construct()
     {
-        add_action('admin_init', array($this, 'backend'));
         add_action('template_redirect', array($this, 'frontend'));
         add_action('all_plugins', array($this, 'preventMultisiteActivation'));
     }
@@ -17,11 +16,6 @@ class App
             wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
             exit();
         }
-    }
-
-    public function backend()
-    {
-        define('FORCE_SSL_ADMIN', true);
     }
 
     public function preventMultisiteActivation($avabile_plugins)
