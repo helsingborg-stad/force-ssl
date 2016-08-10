@@ -21,6 +21,10 @@ class App
         add_filter('wp_get_attachment_image_src', array($this, 'makeUrlProtocolLess'));
         add_filter('script_loader_src', array($this, 'makeUrlProtocolLess'));
         add_filter('style_loader_src', array($this, 'makeUrlProtocolLess'));
+
+        //Fix site url / home url
+        add_filter('option_siteurl', array($this, 'makeUrlHttps'));
+        add_filter('option_home', array($this, 'makeUrlHttps'));
     }
 
     public function redirectToSSL()
@@ -34,6 +38,11 @@ class App
     public function makeUrlProtocolLess($url)
     {
         return preg_replace("(^https?://)", "//", $url);
+    }
+
+    public function makeUrlHttps($url)
+    {
+        return preg_replace("(^https?://)", "https://", $url);
     }
 
     public function preventMultisiteActivation($avabile_plugins)
