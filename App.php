@@ -6,11 +6,17 @@ class App
 {
     public function __construct()
     {
+        //Redirects
         add_action('template_redirect', array($this, 'redirectToSSL'));
         add_action('admin_init', array($this, 'redirectToSSL'));
         add_action('login_init', array($this, 'redirectToSSL'));
         add_action('rest_api_init', array($this, 'redirectToSSL'));
+
+        //Admin interface
         add_action('all_plugins', array($this, 'preventMultisiteActivation'));
+
+        //Sanitazion
+        add_filter('the_permalink', array($this, 'makeUrlProtocolLess'));
     }
 
     public function redirectToSSL()
@@ -19,6 +25,11 @@ class App
             wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
             exit();
         }
+    }
+
+    public function makeUrlProtocolLess($url)
+    {
+        return preg_replace("(^https?://)", "//", $url);
     }
 
     public function preventMultisiteActivation($avabile_plugins)
