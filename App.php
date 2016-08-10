@@ -17,6 +17,7 @@ class App
 
         //Sanitazion
         add_filter('the_permalink', array($this, 'makeUrlProtocolLess'));
+        add_filter('wp_get_attachment_url', array($this,'makeUrlProtocolLess'));
     }
 
     public function redirectToSSL()
