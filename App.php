@@ -29,7 +29,7 @@ class App
         global $current_screen;
 
         if ($current_screen->is_network) {
-            unset($all['akismet/akismet.php']);
+            unset($all['force-ssl/force-ssl.php']);
         }
         return $all;
     }
