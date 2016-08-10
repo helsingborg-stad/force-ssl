@@ -24,13 +24,12 @@ class App
         define('FORCE_SSL_ADMIN', true);
     }
 
-    public function preventMultisiteActivation()
+    public function preventMultisiteActivation($avabile_plugins)
     {
         global $current_screen;
-
         if ($current_screen->is_network) {
-            unset($all['force-ssl/force-ssl.php']);
+            unset($avabile_plugins['force-ssl/force-ssl.php']);
         }
-        return $all;
+        return $avabile_plugins;
     }
 }
