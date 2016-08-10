@@ -6,11 +6,12 @@ class App
 {
     public function __construct()
     {
-        add_action('template_redirect', array($this, 'frontend'));
+        add_action('template_redirect', array($this, 'redirectToSSL'));
+        add_action('admin_init', array($this, 'redirectToSSL'));
         add_action('all_plugins', array($this, 'preventMultisiteActivation'));
     }
 
-    public function frontend()
+    public function redirectToSSL()
     {
         if (!is_ssl()) {
             wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
