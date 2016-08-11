@@ -21,6 +21,7 @@ class App
         add_filter('wp_get_attachment_image_src', array($this, 'makeUrlProtocolLess'));
         add_filter('script_loader_src', array($this, 'makeUrlProtocolLess'));
         add_filter('style_loader_src', array($this, 'makeUrlProtocolLess'));
+        add_filter('the_content', array($this, 'replaceInlineUrls'));
 
         //Fix site url / home url
         add_filter('option_siteurl', array($this, 'makeUrlHttps'));
@@ -43,6 +44,11 @@ class App
     public function makeUrlHttps($url)
     {
         return preg_replace("(^https?://)", "https://", $url);
+    }
+
+    public function replaceInlineUrls($content)
+    {
+        return str_replace(home_url(), $this->makeUrlHttps(home_url()), $content);
     }
 
     public function preventMultisiteActivation($avabile_plugins)
