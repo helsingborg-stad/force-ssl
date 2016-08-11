@@ -21,11 +21,11 @@ class App
         add_filter('wp_get_attachment_image_src', array($this, 'makeUrlProtocolLess'));
         add_filter('script_loader_src', array($this, 'makeUrlProtocolLess'));
         add_filter('style_loader_src', array($this, 'makeUrlProtocolLess'));
-        add_filter('the_content', array($this, 'replaceInlineUrls'));
+        add_filter('the_content', array($this, 'replaceInlineUrls'), 700);
 
         //Fix site url / home url
-        add_filter('option_siteurl', array($this, 'makeUrlHttps'));
-        add_filter('option_home', array($this, 'makeUrlHttps'));
+        add_filter('option_siteurl', array($this, 'makeUrlHttps'), 700);
+        add_filter('option_home', array($this, 'makeUrlHttps'), 700);
     }
 
     public function redirectToSSL()
