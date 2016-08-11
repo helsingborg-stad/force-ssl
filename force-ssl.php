@@ -3,7 +3,7 @@
  * Plugin Name: Force SSL
  * Plugin URI: -
  * Description: Force users to use ssl
- * Version: 1.0
+ * Version: 1.1.14
  * Author: Sebastian Thulin
  * Author URI: -
  * Text domain: force-ssl

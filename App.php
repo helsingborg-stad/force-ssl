@@ -22,6 +22,7 @@ class App
         add_filter('script_loader_src', array($this, 'makeUrlProtocolLess'));
         add_filter('style_loader_src', array($this, 'makeUrlProtocolLess'));
         add_filter('the_content', array($this, 'replaceInlineUrls'), 700);
+        add_filter('widget_text', array($this, 'replaceInlineUrls'), 700);
 
         //Fix site url / home url
         add_filter('option_siteurl', array($this, 'makeUrlHttps'), 700);
