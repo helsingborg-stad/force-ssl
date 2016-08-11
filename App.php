@@ -48,7 +48,7 @@ class App
 
     public function replaceInlineUrls($content)
     {
-        return str_replace(home_url(), $this->makeUrlHttps(home_url()), $content);
+        return str_replace(home_url("/", "http"), home_url("/", "https"), $content);
     }
 
     public function preventMultisiteActivation($avabile_plugins)
