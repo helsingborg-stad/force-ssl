@@ -32,8 +32,10 @@ class App
     public function redirectToSSL()
     {
         if (!is_ssl()) {
-            wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
-            exit();
+            if (!defined('NO_SSL_REDIRECT') || (defined('NO_SSL_REDIRECT') && NO_SSL_REDIRECT !== true)) {
+                wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
+                exit();
+            }
         }
     }
 
