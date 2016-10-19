@@ -6,28 +6,44 @@ class App
 {
     public function __construct()
     {
-        //Redirects
-        add_action('template_redirect', array($this, 'redirectToSSL'));
-        add_action('admin_init', array($this, 'redirectToSSL'));
-        add_action('login_init', array($this, 'redirectToSSL'));
-        add_action('rest_api_init', array($this, 'redirectToSSL'));
 
-        //Admin interface
-        add_action('all_plugins', array($this, 'preventMultisiteActivation'));
+        // Basic force
+        $this->forceSSL();
+
+        //Redirects
+        add_action('template_redirect', array($this, 'redirectToSSL'), 5);
+        add_action('admin_init', array($this, 'redirectToSSL'), 5);
+        add_action('login_init', array($this, 'redirectToSSL'), 5);
+        add_action('rest_api_init', array($this, 'redirectToSSL'), 5);
 
         //Sanitazion
-        add_filter('the_permalink', array($this, 'makeUrlProtocolLess'));
-        add_filter('wp_get_attachment_url', array($this, 'makeUrlProtocolLess'));
-        add_filter('wp_get_attachment_image_src', array($this, 'makeUrlProtocolLess'));
-        add_filter('script_loader_src', array($this, 'makeUrlProtocolLess'));
-        add_filter('style_loader_src', array($this, 'makeUrlProtocolLess'));
+        add_filter('the_permalink', array($this, 'makeUrlProtocolLess'), 700);
+        add_filter('wp_get_attachment_url', array($this, 'makeUrlProtocolLess'), 700);
+        add_filter('wp_get_attachment_image_src', array($this, 'makeUrlProtocolLess'), 700);
+        add_filter('script_loader_src', array($this, 'makeUrlProtocolLess'), 700);
+        add_filter('style_loader_src', array($this, 'makeUrlProtocolLess'), 700);
         add_filter('the_content', array($this, 'replaceInlineUrls'), 700);
         add_filter('widget_text', array($this, 'replaceInlineUrls'), 700);
 
         //Fix site url / home url
-        if (!is_ssl() && !$this->isUsingSSLProxy()) {
-            add_filter('option_siteurl', array($this, 'makeUrlHttps'), 700);
-            add_filter('option_home', array($this, 'makeUrlHttps'), 700);
+        add_filter('option_siteurl', array($this, 'makeUrlProtocolLess'), 700);
+        add_filter('option_home', array($this, 'makeUrlProtocolLess'), 700);
+
+    }
+
+    public function forceSSL()
+    {
+        if (!$this->isUsingSSLProxy()) {
+            if (!defined('FORCE_SSL_ADMIN')) {
+                define('FORCE_SSL_ADMIN', true);
+            }
+            if (!defined('FORCE_SSL_LOGIN')) {
+                define('FORCE_SSL_LOGIN', true);
+            }
+        } else {
+            if (strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+                $_SERVER['HTTPS']='on';
+            }
         }
     }
 
@@ -44,14 +60,9 @@ class App
         return preg_replace("(^https?://)", "//", $url);
     }
 
-    public function makeUrlHttps($url)
-    {
-        return preg_replace("(^https?://)", "https://", $url);
-    }
-
     public function replaceInlineUrls($content)
     {
-        return str_replace(home_url("/", "http"), home_url("/", "https"), $content);
+        return str_replace(home_url("/", "http"), $this->makeUrlProtocolLess(home_url("/", "https")), $content);
     }
 
     public function isUsingSSLProxy()
@@ -60,14 +71,5 @@ class App
             return true;
         }
         return false;
-    }
-
-    public function preventMultisiteActivation($avabile_plugins)
-    {
-        global $current_screen;
-        if ($current_screen->is_network) {
-            unset($avabile_plugins['force-ssl/force-ssl.php']);
-        }
-        return $avabile_plugins;
     }
 }
