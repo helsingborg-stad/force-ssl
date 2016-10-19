@@ -25,17 +25,17 @@ class App
         add_filter('widget_text', array($this, 'replaceInlineUrls'), 700);
 
         //Fix site url / home url
-        add_filter('option_siteurl', array($this, 'makeUrlHttps'), 700);
-        add_filter('option_home', array($this, 'makeUrlHttps'), 700);
+        if (!is_ssl() && !$this->isUsingSSLProxy()) {
+            add_filter('option_siteurl', array($this, 'makeUrlHttps'), 700);
+            add_filter('option_home', array($this, 'makeUrlHttps'), 700);
+        }
     }
 
     public function redirectToSSL()
     {
-        if (!is_ssl()) {
-            if (!defined('NO_SSL_REDIRECT') || (defined('NO_SSL_REDIRECT') && NO_SSL_REDIRECT !== true)) {
-                wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
-                exit();
-            }
+        if (!is_ssl() && !$this->isUsingSSLProxy()) {
+            wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
+            exit();
         }
     }
 
@@ -52,6 +52,14 @@ class App
     public function replaceInlineUrls($content)
     {
         return str_replace(home_url("/", "http"), home_url("/", "https"), $content);
+    }
+
+    public function isUsingSSLProxy()
+    {
+        if ((defined('SSL_PROXY') && SSL_PROXY === true)) {
+            return true;
+        }
+        return false;
     }
 
     public function preventMultisiteActivation($avabile_plugins)
