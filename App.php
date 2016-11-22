@@ -57,7 +57,7 @@ class App
 
     public function makeUrlProtocolLess($url)
     {
-        return preg_replace("(^https?://)", "//", $url);
+        return preg_replace("(^https?://)", "https://", $url);
     }
 
     public function replaceInlineUrls($content)
