@@ -17,17 +17,17 @@ class App
         add_action('rest_api_init', array($this, 'redirectToSSL'), 5);
 
         //Sanitazion
-        add_filter('the_permalink', array($this, 'makeUrlProtocolLess'), 700);
-        add_filter('wp_get_attachment_url', array($this, 'makeUrlProtocolLess'), 700);
-        add_filter('wp_get_attachment_image_src', array($this, 'makeUrlProtocolLess'), 700);
-        add_filter('script_loader_src', array($this, 'makeUrlProtocolLess'), 700);
-        add_filter('style_loader_src', array($this, 'makeUrlProtocolLess'), 700);
+        add_filter('the_permalink', array($this, 'makeUrlHttps'), 700);
+        add_filter('wp_get_attachment_url', array($this, 'makeUrlHttps'), 700);
+        add_filter('wp_get_attachment_image_src', array($this, 'makeUrlHttps'), 700);
+        add_filter('script_loader_src', array($this, 'makeUrlHttps'), 700);
+        add_filter('style_loader_src', array($this, 'makeUrlHttps'), 700);
         add_filter('the_content', array($this, 'replaceInlineUrls'), 700);
         add_filter('widget_text', array($this, 'replaceInlineUrls'), 700);
 
         //Fix site url / home url
-        add_filter('option_siteurl', array($this, 'makeUrlProtocolLess'), 700);
-        add_filter('option_home', array($this, 'makeUrlProtocolLess'), 700);
+        add_filter('option_siteurl', array($this, 'makeUrlHttps'), 700);
+        add_filter('option_home', array($this, 'makeUrlHttps'), 700);
 
     }
 
@@ -41,7 +41,7 @@ class App
                 define('FORCE_SSL_LOGIN', true);
             }
         } else {
-            if (strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+            if (!isset($_SERVER['HTTP_X_FORWARDED_PROTO']) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false)) {
                 $_SERVER['HTTPS']='on';
             }
         }
@@ -55,14 +55,14 @@ class App
         }
     }
 
-    public function makeUrlProtocolLess($url)
+    public function makeUrlHttps($url)
     {
         return preg_replace("(^https?://)", "https://", $url);
     }
 
     public function replaceInlineUrls($content)
     {
-        return str_replace(home_url("/", "http"), $this->makeUrlProtocolLess(home_url("/", "https")), $content);
+        return str_replace(home_url("/", "http"), $this->makeUrlHttps(home_url("/", "https")), $content);
     }
 
     public function isUsingSSLProxy()
