@@ -57,12 +57,12 @@ class App
 
     public function makeUrlHttps($url)
     {
-        return preg_replace("(^https?://)", "https://", $url);
+        return apply_filters('force_ssl_make_url_https', preg_replace('(^https?://)', 'https://', $url));
     }
 
     public function replaceInlineUrls($content)
     {
-        return str_replace(home_url("/", "http"), $this->makeUrlHttps(home_url("/", "https")), $content);
+        return str_replace(home_url('/', 'http'), $this->makeUrlHttps(home_url('/', 'https')), $content);
     }
 
     public function isUsingSSLProxy()
