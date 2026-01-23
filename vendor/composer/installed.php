@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'helsingborg-stad/force-ssl',
-        'pretty_version' => '3.0.2',
-        'version' => '3.0.2.0',
-        'reference' => NULL,
+        'pretty_version' => '3.0.3',
+        'version' => '3.0.3.0',
+        'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'helsingborg-stad/force-ssl' => array(
-            'pretty_version' => '3.0.2',
-            'version' => '3.0.2.0',
-            'reference' => NULL,
+            'pretty_version' => '3.0.3',
+            'version' => '3.0.3.0',
+            'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
